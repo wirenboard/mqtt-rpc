@@ -75,7 +75,7 @@ class TMQTTRPCClient(object):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='MQTT retained message deleter', add_help=False)
+    parser = argparse.ArgumentParser(description='Sample RPC client', add_help=False)
 
     parser.add_argument('-h', '--host', dest='host', type=str,
                      help='MQTT host', default='localhost')

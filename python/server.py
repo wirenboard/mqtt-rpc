@@ -55,7 +55,7 @@ dispatcher[("test", "add")] = lambda a, b: a + b
 
 
 if __name__ =='__main__':
-    parser = argparse.ArgumentParser(description='MQTT retained message deleter', add_help=False)
+    parser = argparse.ArgumentParser(description='Sample RPC server', add_help=False)
 
     parser.add_argument('-h', '--host', dest='host', type=str,
                      help='MQTT host', default='localhost')
