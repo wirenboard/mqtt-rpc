@@ -10,7 +10,7 @@ def main():
     rpc_client = client.TMQTTRPCClient(mqttClient)
     mqttClient.on_message = rpc_client.on_mqtt_message
 
-    resp = rpc_client.call('wbrules', 'Editor', 'List', [{'path': '/'}])
+    resp = rpc_client.call('wbrules', 'Editor', 'List', {'path': '/'})
     print resp
 
     raw_input()
