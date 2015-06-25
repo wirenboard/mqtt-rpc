@@ -1,4 +1,4 @@
-import json
+import json, time
 import pprint
 import argparse
 
@@ -37,22 +37,24 @@ def main():
     client.on_message = rpc_client.on_mqtt_message
 
     #~ resp =  rpc_client.call('Driver', 'main', 'foobar', {'foo':'foo', 'bar':'bar'})
-    resp =  rpc_client.call('db_logger', 'history', 'get_values', {
-                'channels': [
-                    [ 'wb-w1', '00-1234566789' ],
-                    [ 'wb-w1', '00' ],
-                    [ 'wb-adc', 'Vin'],
-                ],
 
-                'timestamp' : {
-                    'gt': 1434728034
-                },
-                'limit' : 5
-            }, 1)
+    for i in xrange(10):
+        resp =  rpc_client.call('db_logger', 'history', 'get_values', {
+                    'channels': [
+                        [ 'wb-w1', '00-1234566789' ],
+                        [ 'wb-w1', '00' ],
+                        [ 'wb-adc', 'Vin'],
+                    ],
 
+                    'timestamp' : {
+                        'gt': 1434728034
+                    },
+                    'limit' : 60
+                }, 1)
 
-    pprint.pprint(resp)
-
+        print "got result!"
+        pprint.pprint(resp)
+        time.sleep(5)
 
 
 
