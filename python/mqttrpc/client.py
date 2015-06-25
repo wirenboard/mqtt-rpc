@@ -1,17 +1,42 @@
 import json
 
 import mosquitto
-#~ import threading
-from concurrent.futures import Future
+import threading
+#~ from concurrent.futures import Future
 from .protocol import MQTTRPC10Response
 from jsonrpc.exceptions import JSONRPCError
 
-from concurrent.futures._base import TimeoutError
+#~ from concurrent.futures._base import TimeoutError
 
-#~ class AsyncResult(threading.Event):
-    #~ def set(self, value):
-        #~ self.value = value
-        #~ super(AsyncResult, self).set()
+class TimeoutError(Exception):
+    pass
+
+class AsyncResult(object):
+    def __init__(self):
+        self._event = threading.Event()
+        self._result = None
+        self._exception = None
+
+    def set_result(self, result):
+        self._result = result
+        self._event.set()
+
+    def set_exception(self, exception):
+        self._exception = exception
+        self._event.set()
+
+    def result(self, timeout=None):
+        if self._event.wait(timeout):
+            return self._result
+        else:
+            raise TimeoutError()
+
+    def exception(self, timeout=None):
+        if self._event.wait(timeout):
+            return self._exception
+        else:
+            raise TimeoutError()
+
 
 class TMQTTRPCClient(object):
     def __init__(self, client):
@@ -19,10 +44,16 @@ class TMQTTRPCClient(object):
         self.counter = 0
         self.futures = {}
         self.subscribes = set()
+        self.rpc_client_id = self.client._client_id.replace('/','_')
 
     def on_mqtt_message(self, mosq, obj, msg):
+        """ return True if the message was indeed an rpc call"""
         print msg.topic
         print msg.payload
+
+        if not mosquitto.topic_matches_sub('/rpc/v1/+/+/+/%s/reply' % self.rpc_client_id, msg.topic):
+            return
+
 
         parts = msg.topic.split('/')
         driver_id = parts[3]
@@ -35,12 +66,14 @@ class TMQTTRPCClient(object):
 
         future = self.futures.pop((driver_id, service_id, method_id, result._id), None)
         if future is None:
-            return
+            return True
 
         if result.error:
             future.set_exception(RuntimeError(result.error))
 
         future.set_result(result.result)
+
+        return True
 
     def call(self, driver, service, method, params, timeout=None):
         future = self.call_async( driver, service, method, params)
@@ -61,13 +94,13 @@ class TMQTTRPCClient(object):
         payload = {'params': params,
                    'id' : self.counter}
 
-        result = Future()
+        result = AsyncResult()
         result.packet_id = self.counter
         self.futures[(driver, service, method, self.counter)] = result
 
 
 
-        topic = '/rpc/v1/%s/%s/%s/%s' % (driver, service, method, self.client._client_id.replace('/','_'))
+        topic = '/rpc/v1/%s/%s/%s/%s' % (driver, service, method, self.rpc_client_id)
 
         subscribe_key = (driver, service, method)
         if subscribe_key not in self.subscribes:
