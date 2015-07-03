@@ -1,4 +1,4 @@
-import client
+import mqttrpc.client 
 import mosquitto
 
 
@@ -7,7 +7,7 @@ def main():
     mqttClient.connect("localhost", 1883)
     mqttClient.loop_start()
 
-    rpc_client = client.TMQTTRPCClient(mqttClient)
+    rpc_client = mqttrpc.client.TMQTTRPCClient(mqttClient)
     mqttClient.on_message = rpc_client.on_mqtt_message
 
     resp = rpc_client.call('wbrules', 'Editor', 'List', {'path': '/'})
