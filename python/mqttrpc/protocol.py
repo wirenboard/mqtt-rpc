@@ -220,7 +220,7 @@ class MQTTRPC10Response(MQTTRPCBaseResponse):
 
     """
 
-    REQUIRED_FIELDS = set(['error', 'id'])
+    REQUIRED_FIELDS = set(['id'])
     POSSIBLE_FIELDS =  set(['error', 'id', 'result'])
 
     @property
