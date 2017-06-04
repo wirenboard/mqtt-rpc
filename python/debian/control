@@ -1,0 +1,20 @@
+Source: python-mqttrpc
+Maintainer: Evgeny Boger <boger@contactless.ru>
+Section: python
+Priority: optional
+Build-Depends: python3, dh-python, python-setuptools (>= 0.6b3), python-all-dev (>= 2.6.6-3), debhelper (>= 7)
+Standards-Version: 3.9.1
+X-Python-Version: >= 2.3
+X-Python3-Version: >= 3.2
+
+Package: python-mqttrpc
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}, python-json-rpc
+XB-Python-Version: ${python:Version}
+Description: Reference MQTT-RPC implementation
+
+Package: python3-mqttrpc
+Architecture: all
+XB-Python-Version: ${python3:Version}
+Depends: ${python3:Depends}, ${misc:Depends}, ${shlibs:Depends}, python3-json-rpc
+Description: Reference MQTT-RPC implementation
