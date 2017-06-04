@@ -2,7 +2,11 @@ import json, time
 import pprint
 import argparse
 
-import mosquitto
+
+try:
+    import mosquitto
+except ImportError:
+    import paho.mqtt.client as mosquitto
 
 
 from mqttrpc.client import TMQTTRPCClient
@@ -10,7 +14,7 @@ from jsonrpc.exceptions import JSONRPCError
 
 
 def main():
-    parser = argparse.ArgumentParser(description='MQTT retained message deleter', add_help=False)
+    parser = argparse.ArgumentParser(description='Sample RPC client', add_help=False)
 
     parser.add_argument('-h', '--host', dest='host', type=str,
                      help='MQTT host', default='localhost')
@@ -50,7 +54,7 @@ def main():
                         'gt': 1434728034
                     },
                     'limit' : 60
-                }, 1)
+                }, 10)
 
         print "got result!"
         pprint.pprint(resp)

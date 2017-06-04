@@ -10,7 +10,7 @@ from jsonrpc.exceptions import (
     JSONRPCServerError,
     JSONRPCDispatchException,
 )
-from protocol import MQTTRPC10Request, MQTTRPC10Response
+from .protocol import MQTTRPC10Request, MQTTRPC10Response
 logger = logging.getLogger(__name__)
 
 

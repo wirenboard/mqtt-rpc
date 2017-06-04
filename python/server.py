@@ -1,6 +1,11 @@
 #!/usr/bin/python
 import argparse
-import mosquitto
+
+try:
+    import mosquitto
+except ImportError:
+    import paho.mqtt.client as mosquitto
+
 import time, random
 import sys
 

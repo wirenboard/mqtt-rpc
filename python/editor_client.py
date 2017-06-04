@@ -1,5 +1,8 @@
 import mqttrpc.client 
-import mosquitto
+try:
+    import mosquitto
+except ImportError:
+    import paho.mqtt.client as mosquitto
 
 
 def main():

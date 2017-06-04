@@ -1,6 +1,10 @@
 import json
 
-import mosquitto
+try:
+    import mosquitto
+except ImportError:
+    import paho.mqtt.client as mosquitto
+
 import threading
 #~ from concurrent.futures import Future
 from .protocol import MQTTRPC10Response
@@ -48,8 +52,6 @@ class TMQTTRPCClient(object):
 
     def on_mqtt_message(self, mosq, obj, msg):
         """ return True if the message was indeed an rpc call"""
-        print msg.topic
-        print msg.payload
 
         if not mosquitto.topic_matches_sub('/rpc/v1/+/+/+/%s/reply' % self.rpc_client_id, msg.topic):
             return
@@ -62,7 +64,7 @@ class TMQTTRPCClient(object):
         client_id = parts[6]
 
 
-        result = MQTTRPC10Response.from_json(msg.payload)
+        result = MQTTRPC10Response.from_json(msg.payload.decode('utf8'))
 
         future = self.futures.pop((driver_id, service_id, method_id, result._id), None)
         if future is None:
@@ -80,7 +82,7 @@ class TMQTTRPCClient(object):
 
         try:
             result = future.result(1E100 if timeout is None else timeout)
-        except TimeoutError, err:
+        except TimeoutError as err:
             # delete callback
             self.futures.pop((driver, service, method, future.packet_id), None)
             raise err
