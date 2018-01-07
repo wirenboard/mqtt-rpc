@@ -15,6 +15,14 @@ from jsonrpc.exceptions import JSONRPCError
 class TimeoutError(Exception):
     pass
 
+class MQTTRPCError(Exception):
+    """ Represents error raised by server """
+    def __init__(self, message, code, data):
+        super(MQTTRPCError, self).__init__("%s [%d]: %s" % (message, code, data))
+        self.rpc_message = message
+        self.code = code
+        self.data = data
+
 class AsyncResult(object):
     def __init__(self):
         self._event = threading.Event()
@@ -29,9 +37,14 @@ class AsyncResult(object):
         self._exception = exception
         self._event.set()
 
+    def _get_result(self):
+        if self._exception:
+            raise self._exception
+        else:
+            return self._result
     def result(self, timeout=None):
         if self._event.wait(timeout):
-            return self._result
+            return self._get_result()
         else:
             raise TimeoutError()
 
@@ -71,7 +84,7 @@ class TMQTTRPCClient(object):
             return True
 
         if result.error:
-            future.set_exception(RuntimeError(result.error))
+            future.set_exception(MQTTRPCError(result.error['message'], result.error['code'], result.error['data']))
 
         future.set_result(result.result)
 
