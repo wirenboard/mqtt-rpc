@@ -1,3 +1,9 @@
+python-mqttrpc (1.1) stable; urgency=medium
+
+  * client: raise received RPC exception in call() method
+
+ -- Evgeny Boger <boger@contactless.ru>  Sun, 07 Jan 2018 20:52:29 +0300
+
 python-mqttrpc (1.0.2) stable; urgency=medium
 
   * use paho.mqtt.client when mosquitto python library is not available
