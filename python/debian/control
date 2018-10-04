@@ -9,12 +9,12 @@ X-Python3-Version: >= 3.2
 
 Package: python-mqttrpc
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}, python-json-rpc
+Depends:  python (>= 2.6.6-3), ${misc:Depends}, ${shlibs:Depends}, python-json-rpc
 XB-Python-Version: ${python:Version}
 Description: Reference MQTT-RPC implementation
 
 Package: python3-mqttrpc
 Architecture: all
 XB-Python-Version: ${python3:Version}
-Depends: ${python3:Depends}, ${misc:Depends}, ${shlibs:Depends}, python3-json-rpc
+Depends: python3 (>=3.2.3-6), ${misc:Depends}, ${shlibs:Depends}, python3-json-rpc
 Description: Reference MQTT-RPC implementation
