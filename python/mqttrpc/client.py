@@ -61,7 +61,13 @@ class TMQTTRPCClient(object):
         self.counter = 0
         self.futures = {}
         self.subscribes = set()
-        self.rpc_client_id = self.client._client_id.replace('/','_')
+        typename = str(type(self.client._client_id))
+        if typename=="<class 'bytes'>": #Python3
+            self.rpc_client_id = self.client._client_id.decode().replace('/','_')
+        elif typename=="<type 'unicode'>": #Python2
+            self.rpc_client_id = str(self.client._client_id).replace('/','_')
+        else:
+            self.rpc_client_id = self.client._client_id.replace('/','_')
 
     def on_mqtt_message(self, mosq, obj, msg):
         """ return True if the message was indeed an rpc call"""
