@@ -2,12 +2,6 @@ MQTT-RPC
 ===============================
 Репозиторий содержит описание протокола MQTT-RPC, а также эталонную реализацию на Python.
 
-Другая реализация включает в себя:
-
-* C++ (как часть libwbmqtt): https://github.com/contactless/libwbmqtt/blob/master/common/mqttrpc.h
-* Go (как часть пакета wbgo): https://github.com/contactless/wbgo/blob/master/rpc.go
-* Java Script (как часть wb-mqtt-homeui): https://github.com/contactless/homeui/blob/contactless/app/scripts/services/rpc.js
-
 MQTT-RPC Описание протокола
 ===============================
 
