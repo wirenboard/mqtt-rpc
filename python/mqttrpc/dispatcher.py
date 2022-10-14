@@ -4,6 +4,11 @@ For usage examples see :meth:`Dispatcher.add_method`
 
 """
 import collections
+try:
+    from collections import abc
+    collections.MutableMapping = abc.MutableMapping
+except:
+    pass
 
 
 class Dispatcher(collections.MutableMapping):
